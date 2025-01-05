@@ -56,29 +56,17 @@
         </div>
       </div>
 
-      <!-- Resposta da IA -->
-      <div class="response-section">
-        <h3>Resposta da IA:</h3>
-        <p id="response"></p>
+      <!-- Caixa de botões de sugestões e correções -->
+      <div id="buttonsContainer" style="display: none;">
+        <button id="suggestionsButton" onclick="toggleSuggestions()">Mostrar Sugestões</button>
+        <button id="correctionsButton" onclick="toggleCorrections()">Mostrar Correções Gramaticais</button>
       </div>
 
-      <!-- Sentimento -->
-      <div class="sentiment-section">
-        <h3>Sentimento:</h3>
-        <p id="sentiment"></p>
-      </div>
+      <!-- Caixa de sugestões -->
+      <div id="suggestionsBox" style="display: none;"></div>
 
-      <!-- Correções Gramaticais -->
-      <div class="corrections-section">
-        <h3>Correções Gramaticais:</h3>
-        <ul id="corrections"></ul>
-      </div>
-
-      <!-- Sugestões -->
-      <div class="suggestions-section">
-        <h3>Sugestões:</h3>
-        <ul id="suggestions"></ul>
-      </div>
+      <!-- Caixa de correções -->
+      <div id="correctionsBox" style="display: none;"></div>
     </div>
 
     <script src="api.js"></script>

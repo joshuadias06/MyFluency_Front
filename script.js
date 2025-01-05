@@ -1,3 +1,9 @@
+// Variáveis de reconhecimento de voz
+let recognition;
+let isRecording = false;
+let messages = [];  // Armazena as mensagens enviadas/recebidas
+let currentMessageInput;
+
 // Função para alternar entre tema claro e escuro
 function toggleTheme() {
     const body = document.body;
@@ -46,11 +52,6 @@ window.onload = () => {
     currentMessageInput = document.getElementById('currentMessage');
 };
 
-// Variáveis de reconhecimento de voz
-let recognition;
-let isRecording = false;
-let messages = [];  // Armazena as mensagens enviadas/recebidas
-
 // Função para enviar a mensagem ao backend e processar a resposta
 async function sendMessage() {
     const message = currentMessageInput.value.trim();
@@ -78,12 +79,12 @@ async function sendMessage() {
 
             // Exibe sugestões, correções de gramática e sentimentos
             if (response.suggestions) {
-                const suggestions = `Sugestões: ${response.suggestions}`;
+                const suggestions = `Sugestões: ${response.suggestions.join(', ')}`;
                 messages.push({ text: suggestions, sender: 'bot' });
             }
 
             if (response.grammar_corrections) {
-                const corrections = `Correções gramaticais: ${response.grammar_corrections}`;
+                const corrections = `Correções gramaticais: ${response.grammar_corrections.join(', ')}`;
                 messages.push({ text: corrections, sender: 'bot' });
             }
 
