@@ -78,9 +78,16 @@ function updateChatWindow() {
 function displayButtons() {
     const chatWindow = document.getElementById('chatWindow');
     
-    const buttonsDiv = document.createElement('div');
-    buttonsDiv.classList.add('buttons-container');
-    
+    // Verifica se a div dos botões já existe
+    let buttonsDiv = document.querySelector('.buttons-container');
+    if (!buttonsDiv) {
+        buttonsDiv = document.createElement('div');
+        buttonsDiv.classList.add('buttons-container');
+        chatWindow.appendChild(buttonsDiv);
+    }
+
+    buttonsDiv.innerHTML = ''; // Limpa a div de botões antes de adicionar novos botões
+
     // Adiciona o botão de sugestões, se houver sugestões
     if (window.suggestionsData && window.suggestionsData.length > 0) {
         const suggestionsButton = document.createElement('button');
@@ -96,29 +103,31 @@ function displayButtons() {
         correctionsButton.onclick = toggleCorrections;
         buttonsDiv.appendChild(correctionsButton);
     }
-
-    chatWindow.appendChild(buttonsDiv);
 }
 
 // Função para mostrar as sugestões
 function toggleSuggestions() {
     const suggestionsBox = document.getElementById('suggestionsBox');
-    if (window.suggestionsData && suggestionsBox.style.display === 'none') {
-        suggestionsBox.style.display = 'block';
-        suggestionsBox.innerHTML = `<strong>Sugestões:</strong> ${window.suggestionsData.join(', ')}`;
-    } else {
-        suggestionsBox.style.display = 'none';
+    if (window.suggestionsData && suggestionsBox) {
+        if (suggestionsBox.style.display === 'none' || suggestionsBox.style.display === '') {
+            suggestionsBox.style.display = 'block';
+            suggestionsBox.innerHTML = `<strong>Sugestões:</strong> ${window.suggestionsData.join(', ')}`;
+        } else {
+            suggestionsBox.style.display = 'none';
+        }
     }
 }
 
 // Função para mostrar as correções gramaticais
 function toggleCorrections() {
     const correctionsBox = document.getElementById('correctionsBox');
-    if (window.correctionsData && correctionsBox.style.display === 'none') {
-        correctionsBox.style.display = 'block';
-        correctionsBox.innerHTML = `<strong>Correções Gramaticais:</strong> ${window.correctionsData.join(', ')}`;
-    } else {
-        correctionsBox.style.display = 'none';
+    if (window.correctionsData && correctionsBox) {
+        if (correctionsBox.style.display === 'none' || correctionsBox.style.display === '') {
+            correctionsBox.style.display = 'block';
+            correctionsBox.innerHTML = `<strong>Correções Gramaticais:</strong> ${window.correctionsData.join(', ')}`;
+        } else {
+            correctionsBox.style.display = 'none';
+        }
     }
 }
 
