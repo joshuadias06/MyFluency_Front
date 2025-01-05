@@ -39,22 +39,9 @@ async function sendMessage() {
                 window.correctionsData = response.grammar_corrections;
             }
 
-            // Exibe as sugestões e correções, se houver
-            // Exibe sugestões se estiverem disponíveis
-            if (window.suggestionsData && window.suggestionsData.length > 0) {
-                const suggestionsText = `Sugestões: ${window.suggestionsData.join(', ')}`;
-                messages.push({ text: suggestionsText, sender: 'bot' });
-            }
-
-            // Exibe correções se estiverem disponíveis
-            if (window.correctionsData && window.correctionsData.length > 0) {
-                const correctionsText = `Correções Gramaticais: ${window.correctionsData.join(', ')}`;
-                messages.push({ text: correctionsText, sender: 'bot' });
-            }
+            // Atualiza a janela de chat com a resposta da IA
+            updateChatWindow();
         }
-
-        // Atualiza a janela de chat com a resposta da IA
-        updateChatWindow();
     }
     currentMessageInput.value = '';  // Limpa o campo de entrada
 }
@@ -68,7 +55,13 @@ function updateChatWindow() {
     messages.forEach(msg => {
         const messageElement = document.createElement('div');
         messageElement.classList.add(msg.sender);
-        messageElement.innerText = msg.text;
+
+        if (msg.sender === 'bot') {
+            messageElement.innerHTML = msg.text;
+        } else {
+            messageElement.innerText = msg.text;
+        }
+        
         chatWindow.appendChild(messageElement);
     });
 
@@ -76,8 +69,35 @@ function updateChatWindow() {
     chatWindow.scrollTop = chatWindow.scrollHeight;
 
     // Exibe ou esconde os botões de sugestões e correções
-    const buttonsContainer = document.getElementById('buttonsContainer');
-    buttonsContainer.style.display = (window.suggestionsData || window.correctionsData) ? 'block' : 'none';
+    if (window.suggestionsData || window.correctionsData) {
+        displayButtons();
+    }
+}
+
+// Função para mostrar os botões de sugestões e correções
+function displayButtons() {
+    const chatWindow = document.getElementById('chatWindow');
+    
+    const buttonsDiv = document.createElement('div');
+    buttonsDiv.classList.add('buttons-container');
+    
+    // Adiciona o botão de sugestões, se houver sugestões
+    if (window.suggestionsData && window.suggestionsData.length > 0) {
+        const suggestionsButton = document.createElement('button');
+        suggestionsButton.innerText = 'Mostrar Sugestões';
+        suggestionsButton.onclick = toggleSuggestions;
+        buttonsDiv.appendChild(suggestionsButton);
+    }
+    
+    // Adiciona o botão de correções gramaticais, se houver correções
+    if (window.correctionsData && window.correctionsData.length > 0) {
+        const correctionsButton = document.createElement('button');
+        correctionsButton.innerText = 'Mostrar Correções Gramaticais';
+        correctionsButton.onclick = toggleCorrections;
+        buttonsDiv.appendChild(correctionsButton);
+    }
+
+    chatWindow.appendChild(buttonsDiv);
 }
 
 // Função para mostrar as sugestões
