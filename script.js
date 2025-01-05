@@ -26,26 +26,30 @@ async function sendMessage() {
         if (response.error) {
             messages.push({ text: response.error, sender: 'bot' });
         } else {
-            // Exibe apenas a resposta inicial da IA
+            // Exibe apenas a resposta inicial da IA (do campo "response")
             const botResponse = `Bot: ${response.response}`;
             messages.push({ text: botResponse, sender: 'bot' });
 
             // Guardar as sugestões e correções para exibição posterior
-            if (response.suggestions) {
+            if (response.suggestions && response.suggestions.length > 0) {
                 window.suggestionsData = response.suggestions;
             }
 
-            if (response.grammar_corrections) {
+            if (response.grammar_corrections && response.grammar_corrections.length > 0) {
                 window.correctionsData = response.grammar_corrections;
             }
 
             // Exibe as sugestões e correções, se houver
-            if (window.suggestionsData) {
-                messages.push({ text: `Sugestões: ${window.suggestionsData.join(', ')}`, sender: 'bot' });
+            // Exibe sugestões se estiverem disponíveis
+            if (window.suggestionsData && window.suggestionsData.length > 0) {
+                const suggestionsText = `Sugestões: ${window.suggestionsData.join(', ')}`;
+                messages.push({ text: suggestionsText, sender: 'bot' });
             }
 
-            if (window.correctionsData) {
-                messages.push({ text: `Correções Gramaticais: ${window.correctionsData.join(', ')}`, sender: 'bot' });
+            // Exibe correções se estiverem disponíveis
+            if (window.correctionsData && window.correctionsData.length > 0) {
+                const correctionsText = `Correções Gramaticais: ${window.correctionsData.join(', ')}`;
+                messages.push({ text: correctionsText, sender: 'bot' });
             }
         }
 
