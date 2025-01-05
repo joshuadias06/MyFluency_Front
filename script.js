@@ -24,56 +24,59 @@ function toggleTheme() {
 window.onload = () => {
     const savedTheme = localStorage.getItem('theme');
     const themeToggleButton = document.querySelector('.theme-toggle-btn i');
+    const body = document.body;
+
+    // Define o tema com base no localStorage ou define o padrão
     if (savedTheme) {
-        document.body.classList.add(savedTheme === 'dark' ? 'dark-theme' : 'light-theme');
+        body.classList.add(savedTheme === 'dark' ? 'dark-theme' : 'light-theme');
         if (savedTheme === 'dark') {
             themeToggleButton.classList.remove('fa-moon');
-            themeToggleButton.classList.add('fa-sun'); // Altera para ícone de sol
+            themeToggleButton.classList.add('fa-sun');
         } else {
             themeToggleButton.classList.remove('fa-sun');
-            themeToggleButton.classList.add('fa-moon'); // Altera para ícone de lua
+            themeToggleButton.classList.add('fa-moon');
         }
     } else {
-        document.body.classList.add('light-theme');
+        body.classList.add('light-theme'); // Tema claro como padrão
         themeToggleButton.classList.remove('fa-sun');
-        themeToggleButton.classList.add('fa-moon'); // Inicializa com ícone de lua
+        themeToggleButton.classList.add('fa-moon');
     }
 
-    // Inicializa a variável currentMessageInput
-    currentMessageInput = document.getElementById('currentMessage');  // Defina corretamente o input de mensagem
+    // Inicializa o campo de entrada de mensagem
+    currentMessageInput = document.getElementById('currentMessage');
 };
 
 // Variáveis de reconhecimento de voz
 let recognition;
 let isRecording = false;
-let messages = [];  // Inicializa a variável 'messages' para armazenar as mensagens
+let messages = [];  // Armazena as mensagens enviadas/recebidas
 
 // Função para enviar a mensagem ao backend e processar a resposta
 async function sendMessage() {
     const message = currentMessageInput.value.trim();
     if (message) {
-        // Adiciona a mensagem do usuário ao chat imediatamente
+        // Adiciona a mensagem do usuário ao chat
         messages.push({ text: message, sender: 'user' });
         updateChatWindow();
 
-        // Adiciona uma mensagem temporária de "aguarde" enquanto processa
+        // Mensagem temporária enquanto processa a resposta
         messages.push({ text: 'Bot: Aguardando resposta...', sender: 'bot', temporary: true });
         updateChatWindow();
 
-        // Envia a mensagem para o backend e recebe a resposta da IA
+        // Envia a mensagem ao backend e recebe a resposta
         const response = await sendToBackend(message);
 
-        // Remove a mensagem temporária de "aguarde"
+        // Remove a mensagem temporária
         messages = messages.filter(msg => !msg.temporary);
 
+        // Processa a resposta da IA
         if (response.error) {
             messages.push({ text: response.error, sender: 'bot' });
         } else {
-            // Exibe a resposta do bot
             const botResponse = `Bot: ${response.response}`;
             messages.push({ text: botResponse, sender: 'bot' });
 
-            // Exibe as sugestões, correções de gramática e sentimento
+            // Exibe sugestões, correções de gramática e sentimentos
             if (response.suggestions) {
                 const suggestions = `Sugestões: ${response.suggestions}`;
                 messages.push({ text: suggestions, sender: 'bot' });
@@ -98,18 +101,18 @@ async function sendMessage() {
 
 // Função para atualizar a janela de chat
 function updateChatWindow() {
-    const chatWindow = document.getElementById('chatWindow');  // Certifique-se de que o elemento existe no HTML
+    const chatWindow = document.getElementById('chatWindow');
     chatWindow.innerHTML = '';  // Limpa a janela de chat
 
-    // Itera sobre as mensagens e as exibe no chat
+    // Exibe as mensagens na janela
     messages.forEach(msg => {
         const messageElement = document.createElement('div');
-        messageElement.classList.add(msg.sender);  // Adiciona uma classe para estilizar as mensagens
+        messageElement.classList.add(msg.sender);
         messageElement.innerText = msg.text;
         chatWindow.appendChild(messageElement);
     });
 
-    // Rola a janela para baixo, para mostrar a mensagem mais recente
+    // Rola para o fim da janela de chat
     chatWindow.scrollTop = chatWindow.scrollHeight;
 }
 
@@ -144,6 +147,9 @@ if ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window) {
         currentMessageInput.value = transcript;
     };
 
+    recognition.onerror = (event) => {
+        console.error('Erro no reconhecimento de voz: ', event.error);
+    };
 } else {
     console.error('SpeechRecognition não é suportado neste navegador.');
 }
