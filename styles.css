@@ -245,35 +245,15 @@ body.dark-theme .theme-toggle-btn i.fa-sun {
   text-align: left;
 }
 
-/* Caixa de sugestões */
-.suggestions-box {
-  background-color: #e8f0fe;
-}
-
-/* Caixa de correções */
-.corrections-box {
-  background-color: #d1e7fd;
-}
-
-/* Exemplo de estilo para os botões de sugestões e correções */
 #buttonsContainer button {
   background-color: #1a73e8;
   color: white;
-  padding: 10px;
-  border: none;
   border-radius: 8px;
+  padding: 10px 20px;
+  border: none;
   cursor: pointer;
-  margin-top: 10px;
-  width: 100%;
 }
 
 #buttonsContainer button:hover {
   background-color: #1558b0;
-}
-
-/* Responsividade: Ajustes no layout de botões */
-@media (max-width: 600px) {
-  #buttonsContainer button {
-    width: 100%;
-  }
 }
