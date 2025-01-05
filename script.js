@@ -1,103 +1,87 @@
-// Variáveis de reconhecimento de voz
+// Variáveis globais
 let recognition;
 let isRecording = false;
-let messages = [];  // Armazena as mensagens enviadas/recebidas
-let currentMessageInput;
+let messages = []; // Armazena mensagens enviadas/recebidas
+let currentMessageInput; // Campo de entrada de mensagens
+window.suggestionsData = []; // Armazena sugestões
+window.correctionsData = []; // Armazena correções
 
-// Função para enviar a mensagem ao backend e processar a resposta
+// Função para enviar mensagem ao backend e processar a resposta
 async function sendMessage() {
     const message = currentMessageInput.value.trim();
-    if (message) {
-        // Adiciona a mensagem do usuário ao chat
-        messages.push({ text: message, sender: 'user' });
-        updateChatWindow();
+    if (!message) return;
 
-        // Mensagem temporária enquanto processa a resposta
-        messages.push({ text: 'Bot: Aguardando resposta...', sender: 'bot', temporary: true });
-        updateChatWindow();
+    // Adiciona mensagem do usuário ao chat
+    messages.push({ text: message, sender: 'user' });
+    updateChatWindow();
 
-        // Envia a mensagem ao backend e recebe a resposta
+    // Mensagem temporária enquanto aguarda a resposta
+    messages.push({ text: 'Bot: Aguardando resposta...', sender: 'bot', temporary: true });
+    updateChatWindow();
+
+    try {
+        // Envia a mensagem ao backend
         const response = await sendToBackend(message);
 
         // Remove a mensagem temporária
         messages = messages.filter(msg => !msg.temporary);
 
-        // Processa a resposta da IA
         if (response.error) {
-            messages.push({ text: response.error, sender: 'bot' });
+            messages.push({ text: `Bot: ${response.error}`, sender: 'bot' });
         } else {
-            // Exibe apenas a resposta inicial da IA (do campo "response")
-            const botResponse = `Bot: ${response.response}`;
-            messages.push({ text: botResponse, sender: 'bot' });
-
-            // Guardar as sugestões e correções para exibição posterior
-            if (response.suggestions && response.suggestions.length > 0) {
-                window.suggestionsData = response.suggestions;
-            }
-
-            if (response.grammar_corrections && response.grammar_corrections.length > 0) {
-                window.correctionsData = response.grammar_corrections;
-            }
-
-            // Atualiza a janela de chat com a resposta da IA
-            updateChatWindow();
+            messages.push({ text: `Bot: ${response.response}`, sender: 'bot' });
+            window.suggestionsData = response.suggestions || [];
+            window.correctionsData = response.grammar_corrections || [];
         }
+    } catch (error) {
+        messages.push({ text: 'Bot: Erro ao processar a mensagem. Tente novamente.', sender: 'bot' });
     }
-    currentMessageInput.value = '';  // Limpa o campo de entrada
+
+    // Atualiza o chat e limpa o campo de entrada
+    updateChatWindow();
+    currentMessageInput.value = '';
 }
 
 // Função para atualizar a janela de chat
 function updateChatWindow() {
     const chatWindow = document.getElementById('chatWindow');
-    chatWindow.innerHTML = '';  // Limpa a janela de chat
+    chatWindow.innerHTML = ''; // Limpa o conteúdo
 
-    // Exibe as mensagens na janela
+    // Adiciona mensagens ao chat
     messages.forEach(msg => {
         const messageElement = document.createElement('div');
         messageElement.classList.add(msg.sender);
-
-        if (msg.sender === 'bot') {
-            messageElement.innerHTML = msg.text;
-        } else {
-            messageElement.innerText = msg.text;
-        }
-        
+        messageElement.innerText = msg.text;
         chatWindow.appendChild(messageElement);
     });
 
-    // Rola para o fim da janela de chat
+    // Rola para o final do chat
     chatWindow.scrollTop = chatWindow.scrollHeight;
 
-    // Exibe ou esconde os botões de sugestões e correções
-    if (window.suggestionsData || window.correctionsData) {
+    // Exibe botões de sugestões/correções se houver dados
+    if (window.suggestionsData.length || window.correctionsData.length) {
         displayButtons();
     }
 }
 
-// Função para mostrar os botões de sugestões e correções
+// Função para mostrar botões de sugestões e correções
 function displayButtons() {
-    const chatWindow = document.getElementById('chatWindow');
-    
-    // Verifica se a div dos botões já existe
     let buttonsDiv = document.querySelector('.buttons-container');
     if (!buttonsDiv) {
         buttonsDiv = document.createElement('div');
         buttonsDiv.classList.add('buttons-container');
-        chatWindow.appendChild(buttonsDiv);
+        document.getElementById('chatWindow').appendChild(buttonsDiv);
     }
+    buttonsDiv.innerHTML = ''; // Limpa os botões existentes
 
-    buttonsDiv.innerHTML = ''; // Limpa a div de botões antes de adicionar novos botões
-
-    // Adiciona o botão de sugestões, se houver sugestões
-    if (window.suggestionsData && window.suggestionsData.length > 0) {
+    if (window.suggestionsData.length) {
         const suggestionsButton = document.createElement('button');
         suggestionsButton.innerText = 'Mostrar Sugestões';
         suggestionsButton.onclick = toggleSuggestions;
         buttonsDiv.appendChild(suggestionsButton);
     }
-    
-    // Adiciona o botão de correções gramaticais, se houver correções
-    if (window.correctionsData && window.correctionsData.length > 0) {
+
+    if (window.correctionsData.length) {
         const correctionsButton = document.createElement('button');
         correctionsButton.innerText = 'Mostrar Correções Gramaticais';
         correctionsButton.onclick = toggleCorrections;
@@ -105,98 +89,94 @@ function displayButtons() {
     }
 }
 
-// Função para mostrar as sugestões
+// Função para alternar exibição das sugestões
 function toggleSuggestions() {
-    const suggestionsBox = document.getElementById('suggestionsBox');
-    if (window.suggestionsData && suggestionsBox) {
-        if (suggestionsBox.style.display === 'none' || suggestionsBox.style.display === '') {
-            suggestionsBox.style.display = 'block';
-            suggestionsBox.innerHTML = `<strong>Sugestões:</strong> ${window.suggestionsData.join(', ')}`;
-        } else {
-            suggestionsBox.style.display = 'none';
-        }
-    }
+    const box = getOrCreateBox('suggestionsBox', 'Sugestões');
+    toggleBoxVisibility(box, window.suggestionsData);
 }
 
-// Função para mostrar as correções gramaticais
+// Função para alternar exibição das correções
 function toggleCorrections() {
-    const correctionsBox = document.getElementById('correctionsBox');
-    if (window.correctionsData && correctionsBox) {
-        if (correctionsBox.style.display === 'none' || correctionsBox.style.display === '') {
-            correctionsBox.style.display = 'block';
-            correctionsBox.innerHTML = `<strong>Correções Gramaticais:</strong> ${window.correctionsData.join(', ')}`;
-        } else {
-            correctionsBox.style.display = 'none';
-        }
+    const box = getOrCreateBox('correctionsBox', 'Correções Gramaticais');
+    toggleBoxVisibility(box, window.correctionsData);
+}
+
+// Função utilitária para criar ou selecionar uma caixa
+function getOrCreateBox(id, title) {
+    let box = document.getElementById(id);
+    if (!box) {
+        box = document.createElement('div');
+        box.id = id;
+        box.style.display = 'none'; // Inicialmente oculto
+        box.classList.add('info-box');
+        document.getElementById('chatWindow').appendChild(box);
+    }
+    box.innerHTML = `<strong>${title}:</strong><ul></ul>`;
+    return box;
+}
+
+// Função utilitária para alternar visibilidade da caixa
+function toggleBoxVisibility(box, data) {
+    if (box.style.display === 'none') {
+        box.style.display = 'block';
+        box.querySelector('ul').innerHTML = data.map(item => `<li>${item}</li>`).join('');
+    } else {
+        box.style.display = 'none';
     }
 }
 
-// Função para alternar entre tema claro e escuro
+// Função para alternar tema
 function toggleTheme() {
     const body = document.body;
-    const currentTheme = body.classList.contains('dark-theme') ? 'dark' : 'light';
-    const themeToggleButton = document.querySelector('.theme-toggle-btn i');
-
-    if (currentTheme === 'light') {
-        body.classList.remove('light-theme');
-        body.classList.add('dark-theme');
-        themeToggleButton.classList.remove('fa-moon');
-        themeToggleButton.classList.add('fa-sun'); // Altera para ícone de sol
-    } else {
-        body.classList.remove('dark-theme');
-        body.classList.add('light-theme');
-        themeToggleButton.classList.remove('fa-sun');
-        themeToggleButton.classList.add('fa-moon'); // Altera para ícone de lua
-    }
-
-    // Salva o tema selecionado no Local Storage
-    localStorage.setItem('theme', currentTheme === 'light' ? 'dark' : 'light');
+    const isDark = body.classList.toggle('dark-theme');
+    body.classList.toggle('light-theme', !isDark);
+    const themeIcon = document.querySelector('.theme-toggle-btn i');
+    themeIcon.classList.toggle('fa-moon', !isDark);
+    themeIcon.classList.toggle('fa-sun', isDark);
+    localStorage.setItem('theme', isDark ? 'dark' : 'light');
 }
 
-// Ao carregar a página, verifica se o tema foi previamente salvo
+// Inicialização ao carregar a página
 window.onload = () => {
-    const savedTheme = localStorage.getItem('theme');
-    const themeToggleButton = document.querySelector('.theme-toggle-btn i');
-    const body = document.body;
-
-    // Define o tema com base no localStorage ou define o padrão
-    if (savedTheme) {
-        body.classList.add(savedTheme === 'dark' ? 'dark-theme' : 'light-theme');
-        if (savedTheme === 'dark') {
-            themeToggleButton.classList.remove('fa-moon');
-            themeToggleButton.classList.add('fa-sun');
-        } else {
-            themeToggleButton.classList.remove('fa-sun');
-            themeToggleButton.classList.add('fa-moon');
-        }
-    } else {
-        body.classList.add('light-theme'); // Tema claro como padrão
-        themeToggleButton.classList.remove('fa-sun');
-        themeToggleButton.classList.add('fa-moon');
-    }
-
-    // Inicializa o campo de entrada de mensagem
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    document.body.classList.add(savedTheme === 'dark' ? 'dark-theme' : 'light-theme');
+    document.body.classList.add(savedTheme === 'light' ? 'light-theme' : 'dark-theme');
+    const themeIcon = document.querySelector('.theme-toggle-btn i');
+    themeIcon.classList.add(savedTheme === 'dark' ? 'fa-sun' : 'fa-moon');
     currentMessageInput = document.getElementById('currentMessage');
 };
 
-// Funções de controle de gravação de voz
+// Controle de gravação de voz
+if ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window) {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    recognition = new SpeechRecognition();
+    recognition.lang = 'pt-BR';
+    recognition.interimResults = true;
+
+    recognition.onresult = (event) => {
+        const transcript = event.results[0][0].transcript;
+        currentMessageInput.value = transcript;
+    };
+
+    recognition.onerror = (event) => console.error('Erro no reconhecimento de voz:', event.error);
+}
+
 function startRecording() {
-    if (recognition) {
-        recognition.start();
-        isRecording = true;
-        document.getElementById('recordButton').disabled = true;
-        document.getElementById('stopButton').disabled = false;
-    }
+    if (!recognition || isRecording) return;
+    recognition.start();
+    isRecording = true;
+    document.getElementById('recordButton').disabled = true;
+    document.getElementById('stopButton').disabled = false;
 }
 
 function stopRecording() {
-    if (recognition) {
-        recognition.stop();
-        isRecording = false;
-        document.getElementById('recordButton').disabled = false;
-        document.getElementById('stopButton').disabled = true;
-    }
+    if (!recognition || !isRecording) return;
+    recognition.stop();
+    isRecording = false;
+    document.getElementById('recordButton').disabled = false;
+    document.getElementById('stopButton').disabled = true;
 }
+
 
 // Inicialização do reconhecimento de voz
 if ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window) {

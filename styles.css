@@ -100,6 +100,53 @@ body {
   overflow-y: auto;
   border-radius: 8px;
   max-height: 70%;
+  position: relative; /* Necessário para posicionar os elementos internos */
+}
+
+/* Ajustando as caixas para ficarem dentro da janela de chat */
+.suggestions-box,
+.corrections-box {
+  position: absolute;
+  bottom: 70px; /* Posiciona as caixas acima da área de entrada */
+  left: 10px;
+  right: 10px;
+  background-color: #f1f1f1;
+  color: #333;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 10px;
+  word-wrap: break-word;
+  display: none;
+  max-height: 150px;
+  overflow-y: auto;
+  z-index: 10;
+}
+
+body.dark-theme .suggestions-box,
+body.dark-theme .corrections-box {
+  background-color: #444;
+  color: #f5f5f5;
+  border: 1px solid #555;
+}
+
+#buttonsContainer {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+#buttonsContainer button {
+  background-color: #1a73e8;
+  color: white;
+  border-radius: 8px;
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+}
+
+#buttonsContainer button:hover {
+  background-color: #1558b0;
 }
 
 .chat-message-wrapper {
@@ -115,18 +162,18 @@ body {
 .chat-message {
   padding: 10px;
   border-radius: 8px;
-  background-color: #e8f0fe;
-  color: #333;
   max-width: 80%;
   word-wrap: break-word;
 }
 
 .user-message .chat-message {
   background-color: #e8f0fe;
+  color: #333;
 }
 
 .bot-message .chat-message {
   background-color: #d1e7fd;
+  color: #333;
 }
 
 .chat-input-wrapper {
@@ -257,3 +304,27 @@ body.dark-theme .theme-toggle-btn i.fa-sun {
 #buttonsContainer button:hover {
   background-color: #1558b0;
 }
+.buttons-container {
+  margin-top: 10px;
+  text-align: center;
+}
+
+.suggestions-box, .corrections-box {
+  margin-top: 10px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+  font-size: 14px;
+}
+
+.suggestions-box ul, .corrections-box ul {
+  list-style-type: disc;
+  padding-left: 20px;
+}
+
+.suggestions-box strong, .corrections-box strong {
+  display: block;
+  margin-bottom: 5px;
+}
+
