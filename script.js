@@ -4,6 +4,100 @@ let isRecording = false;
 let messages = [];  // Armazena as mensagens enviadas/recebidas
 let currentMessageInput;
 
+// Função para enviar a mensagem ao backend e processar a resposta
+async function sendMessage() {
+    const message = currentMessageInput.value.trim();
+    if (message) {
+        // Adiciona a mensagem do usuário ao chat
+        messages.push({ text: message, sender: 'user' });
+        updateChatWindow();
+
+        // Mensagem temporária enquanto processa a resposta
+        messages.push({ text: 'Bot: Aguardando resposta...', sender: 'bot', temporary: true });
+        updateChatWindow();
+
+        // Envia a mensagem ao backend e recebe a resposta
+        const response = await sendToBackend(message);
+
+        // Remove a mensagem temporária
+        messages = messages.filter(msg => !msg.temporary);
+
+        // Processa a resposta da IA
+        if (response.error) {
+            messages.push({ text: response.error, sender: 'bot' });
+        } else {
+            // Exibe apenas a resposta inicial da IA
+            const botResponse = `Bot: ${response.response}`;
+            messages.push({ text: botResponse, sender: 'bot' });
+
+            // Guardar as sugestões e correções para exibição posterior
+            if (response.suggestions) {
+                window.suggestionsData = response.suggestions;
+            }
+
+            if (response.grammar_corrections) {
+                window.correctionsData = response.grammar_corrections;
+            }
+
+            // Exibe as sugestões e correções, se houver
+            if (window.suggestionsData) {
+                messages.push({ text: `Sugestões: ${window.suggestionsData.join(', ')}`, sender: 'bot' });
+            }
+
+            if (window.correctionsData) {
+                messages.push({ text: `Correções Gramaticais: ${window.correctionsData.join(', ')}`, sender: 'bot' });
+            }
+        }
+
+        // Atualiza a janela de chat com a resposta da IA
+        updateChatWindow();
+    }
+    currentMessageInput.value = '';  // Limpa o campo de entrada
+}
+
+// Função para atualizar a janela de chat
+function updateChatWindow() {
+    const chatWindow = document.getElementById('chatWindow');
+    chatWindow.innerHTML = '';  // Limpa a janela de chat
+
+    // Exibe as mensagens na janela
+    messages.forEach(msg => {
+        const messageElement = document.createElement('div');
+        messageElement.classList.add(msg.sender);
+        messageElement.innerText = msg.text;
+        chatWindow.appendChild(messageElement);
+    });
+
+    // Rola para o fim da janela de chat
+    chatWindow.scrollTop = chatWindow.scrollHeight;
+
+    // Exibe ou esconde os botões de sugestões e correções
+    const buttonsContainer = document.getElementById('buttonsContainer');
+    buttonsContainer.style.display = (window.suggestionsData || window.correctionsData) ? 'block' : 'none';
+}
+
+// Função para mostrar as sugestões
+function toggleSuggestions() {
+    const suggestionsBox = document.getElementById('suggestionsBox');
+    if (window.suggestionsData && suggestionsBox.style.display === 'none') {
+        suggestionsBox.style.display = 'block';
+        suggestionsBox.innerHTML = `<strong>Sugestões:</strong> ${window.suggestionsData.join(', ')}`;
+    } else {
+        suggestionsBox.style.display = 'none';
+    }
+}
+
+// Função para mostrar as correções gramaticais
+function toggleCorrections() {
+    const correctionsBox = document.getElementById('correctionsBox');
+    if (window.correctionsData && correctionsBox.style.display === 'none') {
+        correctionsBox.style.display = 'block';
+        correctionsBox.innerHTML = `<strong>Correções Gramaticais:</strong> ${window.correctionsData.join(', ')}`;
+    } else {
+        correctionsBox.style.display = 'none';
+    }
+}
+
 // Função para alternar entre tema claro e escuro
 function toggleTheme() {
     const body = document.body;
@@ -51,71 +145,6 @@ window.onload = () => {
     // Inicializa o campo de entrada de mensagem
     currentMessageInput = document.getElementById('currentMessage');
 };
-
-// Função para enviar a mensagem ao backend e processar a resposta
-async function sendMessage() {
-    const message = currentMessageInput.value.trim();
-    if (message) {
-        // Adiciona a mensagem do usuário ao chat
-        messages.push({ text: message, sender: 'user' });
-        updateChatWindow();
-
-        // Mensagem temporária enquanto processa a resposta
-        messages.push({ text: 'Bot: Aguardando resposta...', sender: 'bot', temporary: true });
-        updateChatWindow();
-
-        // Envia a mensagem ao backend e recebe a resposta
-        const response = await sendToBackend(message);
-
-        // Remove a mensagem temporária
-        messages = messages.filter(msg => !msg.temporary);
-
-        // Processa a resposta da IA
-        if (response.error) {
-            messages.push({ text: response.error, sender: 'bot' });
-        } else {
-            const botResponse = `Bot: ${response.response}`;
-            messages.push({ text: botResponse, sender: 'bot' });
-
-            // Exibe sugestões, correções de gramática e sentimentos
-            if (response.suggestions) {
-                const suggestions = `Sugestões: ${response.suggestions.join(', ')}`;
-                messages.push({ text: suggestions, sender: 'bot' });
-            }
-
-            if (response.grammar_corrections) {
-                const corrections = `Correções gramaticais: ${response.grammar_corrections.join(', ')}`;
-                messages.push({ text: corrections, sender: 'bot' });
-            }
-
-            if (response.sentiment) {
-                const sentiment = `Sentimento: ${response.sentiment}`;
-                messages.push({ text: sentiment, sender: 'bot' });
-            }
-        }
-
-        // Atualiza a janela de chat com a resposta da IA
-        updateChatWindow();
-    }
-    currentMessageInput.value = '';  // Limpa o campo de entrada
-}
-
-// Função para atualizar a janela de chat
-function updateChatWindow() {
-    const chatWindow = document.getElementById('chatWindow');
-    chatWindow.innerHTML = '';  // Limpa a janela de chat
-
-    // Exibe as mensagens na janela
-    messages.forEach(msg => {
-        const messageElement = document.createElement('div');
-        messageElement.classList.add(msg.sender);
-        messageElement.innerText = msg.text;
-        chatWindow.appendChild(messageElement);
-    });
-
-    // Rola para o fim da janela de chat
-    chatWindow.scrollTop = chatWindow.scrollHeight;
-}
 
 // Funções de controle de gravação de voz
 function startRecording() {
