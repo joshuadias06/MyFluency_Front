@@ -93,7 +93,6 @@ function displayButtons() {
     }
 }
 
-
 // Função para alternar exibição das sugestões
 function toggleSuggestions() {
     // Verifica se a caixa de correções está visível, se sim, a oculta
@@ -102,7 +101,7 @@ function toggleSuggestions() {
         correctionsBox.style.display = 'none'; // Oculta a caixa de correções
     }
 
-    const box = getOrCreateBox('suggestionsBox', 'Seggestions');
+    const box = getOrCreateBox('suggestionsBox', 'Sugestões');
     toggleBoxVisibility(box, window.suggestionsData, '#d1e8f7');
 }
 
@@ -114,7 +113,7 @@ function toggleCorrections() {
         suggestionsBox.style.display = 'none'; // Oculta a caixa de sugestões
     }
 
-    const box = getOrCreateBox('correctionsBox', 'Corrections');
+    const box = getOrCreateBox('correctionsBox', 'Correções Gramaticais');
     toggleBoxVisibility(box, window.correctionsData, '#c8f1ff');
 }
 
@@ -193,24 +192,4 @@ function stopRecording() {
     isRecording = false;
     document.getElementById('recordButton').disabled = false;
     document.getElementById('stopButton').disabled = true;
-}
-
-
-// Inicialização do reconhecimento de voz
-if ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window) {
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    recognition = new SpeechRecognition();
-    recognition.lang = 'pt-BR';
-    recognition.interimResults = true;
-
-    recognition.onresult = (event) => {
-        const transcript = event.results[0][0].transcript;
-        currentMessageInput.value = transcript;
-    };
-
-    recognition.onerror = (event) => {
-        console.error('Erro no reconhecimento de voz: ', event.error);
-    };
-} else {
-    console.error('SpeechRecognition não é suportado neste navegador.');
 }
