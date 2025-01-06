@@ -77,7 +77,7 @@ function displayButtons() {
     // Botão de Sugestões
     if (window.suggestionsData.length) {
         const suggestionsButton = document.createElement('button');
-        suggestionsButton.innerText = 'Mostrar Sugestões';
+        suggestionsButton.innerText = 'Suggetions';
         suggestionsButton.onclick = toggleSuggestions;
         suggestionsButton.classList.add('styled-button'); // Adiciona a classe CSS
         buttonsDiv.appendChild(suggestionsButton);
@@ -86,7 +86,7 @@ function displayButtons() {
     // Botão de Correções Gramaticais
     if (window.correctionsData.length) {
         const correctionsButton = document.createElement('button');
-        correctionsButton.innerText = 'Mostrar Correções Gramaticais';
+        correctionsButton.innerText = 'Corrections';
         correctionsButton.onclick = toggleCorrections;
         correctionsButton.classList.add('styled-button'); // Adiciona a classe CSS
         buttonsDiv.appendChild(correctionsButton);
@@ -101,7 +101,7 @@ function toggleSuggestions() {
         correctionsBox.style.display = 'none'; // Oculta a caixa de correções
     }
 
-    const box = getOrCreateBox('suggestionsBox', 'Sugestões');
+    const box = getOrCreateBox('suggestionsBox', 'Suggestions');
     toggleBoxVisibility(box, window.suggestionsData, '#d1e8f7');
 }
 
@@ -113,7 +113,7 @@ function toggleCorrections() {
         suggestionsBox.style.display = 'none'; // Oculta a caixa de sugestões
     }
 
-    const box = getOrCreateBox('correctionsBox', 'Correções Gramaticais');
+    const box = getOrCreateBox('correctionsBox', 'Corrections');
     toggleBoxVisibility(box, window.correctionsData, '#c8f1ff');
 }
 
