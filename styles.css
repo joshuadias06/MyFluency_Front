@@ -344,3 +344,39 @@ body.dark-theme .theme-toggle-btn i.fa-sun {
   background-color: #1A80C4; /* Cor mais escura ao passar o mouse */
 }
 
+/* Estilo comum para a caixa de sugestões e correções */
+.info-box {
+  color: #333; /* Cor do texto */
+  border-radius: 8px; /* Borda arredondada */
+  padding: 15px; /* Espaçamento interno */
+  margin-top: 10px; /* Espaçamento entre a caixa e os botões */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra suave */
+  max-height: 300px; /* Limita a altura máxima */
+  overflow-y: auto; /* Permite rolagem vertical se necessário */
+}
+
+.info-box strong {
+  font-size: 18px; /* Tamanho do título da caixa */
+  display: block; /* Título em linha separada */
+  margin-bottom: 10px; /* Espaçamento abaixo do título */
+}
+
+.info-box ul {
+  list-style-type: none; /* Remove o marcador da lista */
+  padding-left: 0; /* Remove o espaçamento à esquerda */
+}
+
+.info-box li {
+  margin: 8px 0; /* Espaçamento entre os itens da lista */
+  font-size: 16px; /* Tamanho do texto */
+}
+
+/* Estilo específico para a caixa de sugestões */
+#suggestionsBox {
+  background-color: #d1e8f7; /* Cor suavemente mais clara que o botão de sugestões */
+}
+
+/* Estilo específico para a caixa de correções */
+#correctionsBox {
+  background-color: #c8f1ff; /* Cor suavemente mais clara que o botão de correções */
+}

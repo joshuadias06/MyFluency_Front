@@ -97,13 +97,13 @@ function displayButtons() {
 // Função para alternar exibição das sugestões
 function toggleSuggestions() {
     const box = getOrCreateBox('suggestionsBox', 'Sugestões');
-    toggleBoxVisibility(box, window.suggestionsData);
+    toggleBoxVisibility(box, window.suggestionsData, '#d1e8f7');
 }
 
 // Função para alternar exibição das correções
 function toggleCorrections() {
     const box = getOrCreateBox('correctionsBox', 'Correções Gramaticais');
-    toggleBoxVisibility(box, window.correctionsData);
+    toggleBoxVisibility(box, window.correctionsData, '#c8f1ff');
 }
 
 // Função utilitária para criar ou selecionar uma caixa
@@ -121,14 +121,16 @@ function getOrCreateBox(id, title) {
 }
 
 // Função utilitária para alternar visibilidade da caixa
-function toggleBoxVisibility(box, data) {
+function toggleBoxVisibility(box, data, color) {
     if (box.style.display === 'none') {
         box.style.display = 'block';
         box.querySelector('ul').innerHTML = data.map(item => `<li>${item}</li>`).join('');
+        box.style.backgroundColor = color; // Aplica a cor de fundo personalizada para cada caixa
     } else {
         box.style.display = 'none';
     }
 }
+
 
 // Função para alternar tema
 function toggleTheme() {
