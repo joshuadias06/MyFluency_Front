@@ -102,7 +102,7 @@ function toggleSuggestions() {
         correctionsBox.style.display = 'none'; // Oculta a caixa de correções
     }
 
-    const box = getOrCreateBox('suggestionsBox', 'Sugestões');
+    const box = getOrCreateBox('suggestionsBox', 'Seggestions');
     toggleBoxVisibility(box, window.suggestionsData, '#d1e8f7');
 }
 
@@ -114,7 +114,7 @@ function toggleCorrections() {
         suggestionsBox.style.display = 'none'; // Oculta a caixa de sugestões
     }
 
-    const box = getOrCreateBox('correctionsBox', 'Correções Gramaticais');
+    const box = getOrCreateBox('correctionsBox', 'Corrections');
     toggleBoxVisibility(box, window.correctionsData, '#c8f1ff');
 }
 
