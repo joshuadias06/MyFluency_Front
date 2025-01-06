@@ -96,12 +96,24 @@ function displayButtons() {
 
 // Função para alternar exibição das sugestões
 function toggleSuggestions() {
+    // Verifica se a caixa de correções está visível, se sim, a oculta
+    const correctionsBox = document.getElementById('correctionsBox');
+    if (correctionsBox && correctionsBox.style.display === 'block') {
+        correctionsBox.style.display = 'none'; // Oculta a caixa de correções
+    }
+
     const box = getOrCreateBox('suggestionsBox', 'Sugestões');
     toggleBoxVisibility(box, window.suggestionsData, '#d1e8f7');
 }
 
 // Função para alternar exibição das correções
 function toggleCorrections() {
+    // Verifica se a caixa de sugestões está visível, se sim, a oculta
+    const suggestionsBox = document.getElementById('suggestionsBox');
+    if (suggestionsBox && suggestionsBox.style.display === 'block') {
+        suggestionsBox.style.display = 'none'; // Oculta a caixa de sugestões
+    }
+
     const box = getOrCreateBox('correctionsBox', 'Correções Gramaticais');
     toggleBoxVisibility(box, window.correctionsData, '#c8f1ff');
 }
@@ -130,7 +142,6 @@ function toggleBoxVisibility(box, data, color) {
         box.style.display = 'none';
     }
 }
-
 
 // Função para alternar tema
 function toggleTheme() {
