@@ -74,20 +74,25 @@ function displayButtons() {
     }
     buttonsDiv.innerHTML = ''; // Limpa os botões existentes
 
+    // Botão de Sugestões
     if (window.suggestionsData.length) {
         const suggestionsButton = document.createElement('button');
         suggestionsButton.innerText = 'Mostrar Sugestões';
         suggestionsButton.onclick = toggleSuggestions;
+        suggestionsButton.classList.add('styled-button'); // Adiciona a classe CSS
         buttonsDiv.appendChild(suggestionsButton);
     }
 
+    // Botão de Correções Gramaticais
     if (window.correctionsData.length) {
         const correctionsButton = document.createElement('button');
         correctionsButton.innerText = 'Mostrar Correções Gramaticais';
         correctionsButton.onclick = toggleCorrections;
+        correctionsButton.classList.add('styled-button'); // Adiciona a classe CSS
         buttonsDiv.appendChild(correctionsButton);
     }
 }
+
 
 // Função para alternar exibição das sugestões
 function toggleSuggestions() {

@@ -327,4 +327,20 @@ body.dark-theme .theme-toggle-btn i.fa-sun {
   display: block;
   margin-bottom: 5px;
 }
+/* Estilo para os botões */
+.styled-button {
+  background-color: #25A2EB; /* Cor de fundo */
+  color: white; /* Cor do texto */
+  border: none; /* Remove a borda padrão */
+  border-radius: 8px; /* Borda arredondada */
+  padding: 10px 20px; /* Espaçamento interno */
+  font-size: 16px; /* Tamanho da fonte */
+  cursor: pointer; /* Cursor de ponteiro ao passar sobre o botão */
+  transition: background-color 0.3s ease; /* Transição suave ao passar o mouse */
+}
+
+/* Efeito de hover para os botões */
+.styled-button:hover {
+  background-color: #1A80C4; /* Cor mais escura ao passar o mouse */
+}
 
