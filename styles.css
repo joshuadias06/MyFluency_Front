@@ -350,6 +350,7 @@ body.dark-theme .theme-toggle-btn i.fa-sun {
 }
 /* Estilo para a caixa de mensagens do usuário */
 /* Estilo para a caixa de mensagens do usuário */
+/* Estilo para a mensagem do usuário no tema claro */
 .user {
   background-color: #e8f0fe; /* Cor de fundo para a mensagem do usuário */
   text-align: left; /* Alinha o texto da mensagem à esquerda */
@@ -365,7 +366,7 @@ body.dark-theme .theme-toggle-btn i.fa-sun {
   margin-right: 0; /* Certifica-se de que a margem à direita é zero */
 }
 
-/* Estilo para a caixa de mensagens do bot */
+/* Estilo para a caixa de mensagens do bot no tema claro */
 .bot {
   background-color: #d1e7fd; /* Cor de fundo para a resposta do bot */
   text-align: left; /* Alinha o texto da mensagem à esquerda */
@@ -379,7 +380,7 @@ body.dark-theme .theme-toggle-btn i.fa-sun {
   float: left; /* Faz a mensagem ir para o lado esquerdo */
 }
 
-/* Estilo para "Aguardando resposta..." */
+/* Estilo para "Aguardando resposta..." no tema claro */
 .temporary {
   background-color: #f1f1f1; /* Cor de fundo para "Aguardando resposta..." */
   color: #888;
@@ -393,6 +394,27 @@ body.dark-theme .theme-toggle-btn i.fa-sun {
   clear: both;
   float: none; /* Centraliza a mensagem "Aguardando resposta..." */
 }
+
+/* Tema Escuro */
+
+/* Estilo para a mensagem do usuário no tema escuro */
+body.dark-theme .user {
+  background-color: #444; /* Cor de fundo para a mensagem do usuário no tema escuro */
+  color: #f5f5f5; /* Cor do texto no tema escuro */
+}
+
+/* Estilo para a caixa de mensagens do bot no tema escuro */
+body.dark-theme .bot {
+  background-color: #555; /* Cor de fundo para a resposta do bot no tema escuro */
+  color: #f5f5f5; /* Cor do texto no tema escuro */
+}
+
+/* Estilo para "Aguardando resposta..." no tema escuro */
+body.dark-theme .temporary {
+  background-color: #444; /* Cor de fundo para "Aguardando resposta..." no tema escuro */
+  color: #f5f5f5; /* Cor do texto no tema escuro */
+}
+
 
 /* Ajuste para o contêiner de mensagens para garantir o posicionamento correto */
 .chat-message-wrapper {
