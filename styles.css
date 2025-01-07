@@ -348,9 +348,8 @@ body.dark-theme .theme-toggle-btn i.fa-sun {
 .suggestions-box, .corrections-box {
   margin-top: 10px;
 }
+
 /* Estilo para a caixa de mensagens do usuário */
-/* Estilo para a caixa de mensagens do usuário */
-/* Estilo para a mensagem do usuário no tema claro */
 .user {
   background-color: #e8f0fe; /* Cor de fundo para a mensagem do usuário */
   text-align: left; /* Alinha o texto da mensagem à esquerda */
@@ -437,7 +436,6 @@ body.dark-theme .temporary {
   justify-content: flex-start; /* Alinha a mensagem do bot à esquerda */
 }
 
-
 /* Estilo para os botões */
 .styled-button {
   background-color: #25A2EB; /* Cor de fundo */
@@ -478,3 +476,5 @@ body.dark-theme .temporary {
 #buttonsContainer button:hover {
   background-color: #1558b0;
 }
+
+

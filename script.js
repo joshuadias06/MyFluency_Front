@@ -118,7 +118,7 @@ function toggleSuggestions() {
     }
 
     const box = getOrCreateBox('suggestionsBox', 'Suggestions');
-    toggleBoxVisibility(box, window.suggestionsData, '#d1e8f7');
+    toggleBoxVisibility(box, window.suggestionsData, '#444');
 }
 
 // Função para alternar exibição das correções
@@ -130,7 +130,7 @@ function toggleCorrections() {
     }
 
     const box = getOrCreateBox('correctionsBox', 'Corrections');
-    toggleBoxVisibility(box, window.correctionsData, '#c8f1ff');
+    toggleBoxVisibility(box, window.correctionsData, '#444');
 }
 
 // Função utilitária para criar ou selecionar uma caixa
