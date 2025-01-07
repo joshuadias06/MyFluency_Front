@@ -93,6 +93,7 @@ body {
   max-width: 600px;
 }
 
+/* Estilo geral para o contêiner de mensagens e sugestões/correções */
 .chat-window {
   flex: 1;
   width: 100%;
@@ -100,28 +101,64 @@ body {
   overflow-y: auto;
   border-radius: 8px;
   max-height: 70%;
-  position: relative; /* Necessário para posicionar os elementos internos */
+  position: relative;
+  display: flex;
+  flex-direction: column; /* Garante que as mensagens sejam empilhadas corretamente */
 }
 
-/* Ajustando as caixas para ficarem dentro da janela de chat */
+/* Ajuste para a exibição das mensagens */
+.chat-message-wrapper {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 10px;
+  width: 100%; /* Garante que o container de mensagens ocupe toda a largura */
+}
+
+.user-message {
+  display: flex;
+  justify-content: flex-end; /* Alinha a mensagem do usuário à direita */
+}
+
+.bot-message {
+  display: flex;
+  justify-content: flex-start; /* Alinha a mensagem do bot à esquerda */
+}
+
+.chat-message {
+  padding: 10px;
+  border-radius: 8px;
+  max-width: 80%;
+  word-wrap: break-word;
+  display: inline-block;
+}
+
+.user-message .chat-message {
+  background-color: #e8f0fe;
+  color: #333;
+}
+
+.bot-message .chat-message {
+  background-color: #d1e7fd;
+  color: #333;
+}
+
+/* Caixa de sugestões e correções (direcionada para ficar abaixo das mensagens) */
 .suggestions-box,
 .corrections-box {
-  position: absolute;
-  bottom: 70px; /* Posiciona as caixas acima da área de entrada */
-  left: 10px;
-  right: 10px;
-  background-color: #f1f1f1;
-  color: #333;
+  display: block; /* Permite que a caixa ocupe a linha inteira */
+  margin-top: 10px; /* Espaço entre a última mensagem e a caixa */
+  padding: 10px;
   border: 1px solid #ddd;
   border-radius: 8px;
-  padding: 10px;
+  background-color: #f1f1f1;
+  color: #333;
   word-wrap: break-word;
-  display: none;
-  max-height: 150px;
-  overflow-y: auto;
-  z-index: 10;
+  max-width: 100%;
+  z-index: 10; /* Para garantir que fiquem visíveis acima de outras mensagens */
+  display: none; /* Inicialmente invisível */
 }
 
+/* Para o tema escuro */
 body.dark-theme .suggestions-box,
 body.dark-theme .corrections-box {
   background-color: #444;
@@ -129,31 +166,30 @@ body.dark-theme .corrections-box {
   border: 1px solid #555;
 }
 
-#buttonsContainer {
-  display: flex;
-  gap: 10px;
-  justify-content: center;
-  margin-top: 10px;
+/* Responsividade para dispositivos menores */
+@media (max-width: 600px) {
+  .suggestions-box,
+  .corrections-box {
+    margin-top: 10px;
+    max-width: 100%;
+  }
 }
 
-#buttonsContainer button {
-  background-color: #1a73e8;
-  color: white;
-  border-radius: 8px;
-  padding: 10px 20px;
-  border: none;
-  cursor: pointer;
-}
-
-#buttonsContainer button:hover {
-  background-color: #1558b0;
-}
-
+/* Ajuste nas mensagens do usuário */
 .chat-message-wrapper {
   display: flex;
-  align-items: center;
+  flex-direction: column; /* Garante que as mensagens sejam empilhadas corretamente */
   margin-bottom: 10px;
 }
+
+/* Ajuste para a exibição de botões em telas menores */
+@media (max-width: 600px) {
+  #buttonsContainer {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
 
 .chat-message-wrapper.user-message {
   justify-content: flex-end;
@@ -311,22 +347,75 @@ body.dark-theme .theme-toggle-btn i.fa-sun {
 
 .suggestions-box, .corrections-box {
   margin-top: 10px;
+}
+/* Estilo para a caixa de mensagens do usuário */
+/* Estilo para a caixa de mensagens do usuário */
+.user {
+  background-color: #e8f0fe; /* Cor de fundo para a mensagem do usuário */
+  text-align: left; /* Alinha o texto da mensagem à esquerda */
   padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  background-color: #f9f9f9;
-  font-size: 14px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  max-width: 70%; /* Define a largura máxima */
+  word-wrap: break-word;
+  display: inline-block; /* Faz com que a mensagem ocupe apenas o necessário */
+  float: right; /* Faz a mensagem ir para o lado direito */
+  clear: both;
+  margin-left: auto; /* Alinha a caixa da mensagem à direita */
+  margin-right: 0; /* Certifica-se de que a margem à direita é zero */
 }
 
-.suggestions-box ul, .corrections-box ul {
-  list-style-type: disc;
-  padding-left: 20px;
+/* Estilo para a caixa de mensagens do bot */
+.bot {
+  background-color: #d1e7fd; /* Cor de fundo para a resposta do bot */
+  text-align: left; /* Alinha o texto da mensagem à esquerda */
+  padding: 10px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  max-width: 70%; /* Define a largura máxima */
+  word-wrap: break-word;
+  display: inline-block; /* Faz com que a mensagem ocupe apenas o necessário */
+  clear: both;
+  float: left; /* Faz a mensagem ir para o lado esquerdo */
 }
 
-.suggestions-box strong, .corrections-box strong {
-  display: block;
-  margin-bottom: 5px;
+/* Estilo para "Aguardando resposta..." */
+.temporary {
+  background-color: #f1f1f1; /* Cor de fundo para "Aguardando resposta..." */
+  color: #888;
+  text-align: center; /* Centraliza o texto */
+  padding: 10px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  max-width: 70%;
+  word-wrap: break-word;
+  display: inline-block; /* Faz com que a mensagem ocupe apenas o necessário */
+  clear: both;
+  float: none; /* Centraliza a mensagem "Aguardando resposta..." */
 }
+
+/* Ajuste para o contêiner de mensagens para garantir o posicionamento correto */
+.chat-message-wrapper {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  align-items: flex-start; /* Garante o alinhamento à esquerda por padrão */
+  clear: both; /* Garante que as mensagens não se sobreponham */
+}
+
+/* Ajuste para a exibição das mensagens */
+.user-message {
+  display: flex;
+  justify-content: flex-end; /* Alinha a mensagem do usuário à direita */
+}
+
+/* Ajuste para a exibição das mensagens do bot */
+.bot-message {
+  display: flex;
+  justify-content: flex-start; /* Alinha a mensagem do bot à esquerda */
+}
+
+
 /* Estilo para os botões */
 .styled-button {
   background-color: #25A2EB; /* Cor de fundo */
@@ -337,6 +426,7 @@ body.dark-theme .theme-toggle-btn i.fa-sun {
   font-size: 16px; /* Tamanho da fonte */
   cursor: pointer; /* Cursor de ponteiro ao passar sobre o botão */
   transition: background-color 0.3s ease; /* Transição suave ao passar o mouse */
+  margin: 5px;
 }
 
 /* Efeito de hover para os botões */
@@ -344,39 +434,25 @@ body.dark-theme .theme-toggle-btn i.fa-sun {
   background-color: #1A80C4; /* Cor mais escura ao passar o mouse */
 }
 
-/* Estilo comum para a caixa de sugestões e correções */
-.info-box {
-  color: #333; /* Cor do texto */
-  border-radius: 8px; /* Borda arredondada */
-  padding: 15px; /* Espaçamento interno */
-  margin-top: 10px; /* Espaçamento entre a caixa e os botões */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra suave */
-  max-height: 300px; /* Limita a altura máxima */
-  overflow-y: auto; /* Permite rolagem vertical se necessário */
+/* Estilo para o contêiner de botões */
+#buttonsContainer {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 10px;
+  clear: both; /* Garantir que os botões fiquem abaixo das mensagens */
+  flex-wrap: wrap; /* Permite que os botões se ajustem em telas menores */
 }
 
-.info-box strong {
-  font-size: 18px; /* Tamanho do título da caixa */
-  display: block; /* Título em linha separada */
-  margin-bottom: 10px; /* Espaçamento abaixo do título */
+#buttonsContainer button {
+  background-color: #1a73e8;
+  color: white;
+  border-radius: 8px;
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
 }
 
-.info-box ul {
-  list-style-type: none; /* Remove o marcador da lista */
-  padding-left: 0; /* Remove o espaçamento à esquerda */
-}
-
-.info-box li {
-  margin: 8px 0; /* Espaçamento entre os itens da lista */
-  font-size: 16px; /* Tamanho do texto */
-}
-
-/* Estilo específico para a caixa de sugestões */
-#suggestionsBox {
-  background-color: #d1e8f7; /* Cor suavemente mais clara que o botão de sugestões */
-}
-
-/* Estilo específico para a caixa de correções */
-#correctionsBox {
-  background-color: #c8f1ff; /* Cor suavemente mais clara que o botão de correções */
+#buttonsContainer button:hover {
+  background-color: #1558b0;
 }

@@ -42,6 +42,7 @@ async function sendMessage() {
     currentMessageInput.value = '';
 }
 
+
 // Função para atualizar a janela de chat
 function updateChatWindow() {
     const chatWindow = document.getElementById('chatWindow');
@@ -51,6 +52,20 @@ function updateChatWindow() {
     messages.forEach(msg => {
         const messageElement = document.createElement('div');
         messageElement.classList.add(msg.sender);
+        
+        // Se a mensagem for do usuário, a classe user será aplicada
+        if (msg.sender === 'user') {
+            messageElement.classList.add('user'); 
+        }
+        // Se for do bot e temporária (Aguardando resposta), a classe temporary será aplicada
+        else if (msg.sender === 'bot' && msg.temporary) {
+            messageElement.classList.add('temporary'); 
+        }
+        // Caso contrário, a mensagem do bot terá a classe bot
+        else {
+            messageElement.classList.add('bot'); 
+        }
+
         messageElement.innerText = msg.text;
         chatWindow.appendChild(messageElement);
     });
@@ -63,6 +78,7 @@ function updateChatWindow() {
         displayButtons();
     }
 }
+
 
 // Função para mostrar botões de sugestões e correções
 function displayButtons() {
