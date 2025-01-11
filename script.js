@@ -209,3 +209,65 @@ function stopRecording() {
     document.getElementById('recordButton').disabled = false;
     document.getElementById('stopButton').disabled = true;
 }
+
+
+// Função para reproduzir texto usando síntese de fala
+function speakText(text) {
+    if ('speechSynthesis' in window) {
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'en-US'; // Define o idioma como inglês
+        speechSynthesis.speak(utterance);
+    } else {
+        console.warn('API de síntese de fala não suportada pelo navegador.');
+    }
+}
+
+// Modificar a função toggleBoxVisibility para incluir a reprodução de texto
+function toggleBoxVisibility(box, data, color) {
+    if (box.style.display === 'none') {
+        box.style.display = 'block';
+        const list = box.querySelector('ul');
+        list.innerHTML = data.map(item => `<li>${item}</li>`).join('');
+        box.style.backgroundColor = color; // Aplica a cor de fundo personalizada
+        // Reproduz o texto dos itens
+        data.forEach(item => speakText(item));
+    } else {
+        box.style.display = 'none';
+    }
+}
+
+// Alterar a função updateChatWindow para incluir reprodução de mensagens do bot
+function updateChatWindow() {
+    const chatWindow = document.getElementById('chatWindow');
+    chatWindow.innerHTML = ''; // Limpa o conteúdo
+
+    // Adiciona mensagens ao chat
+    messages.forEach(msg => {
+        const messageElement = document.createElement('div');
+        messageElement.classList.add(msg.sender);
+
+        if (msg.sender === 'user') {
+            messageElement.classList.add('user');
+        } else if (msg.sender === 'bot' && msg.temporary) {
+            messageElement.classList.add('temporary');
+        } else {
+            messageElement.classList.add('bot');
+        }
+
+        messageElement.innerText = msg.text;
+        chatWindow.appendChild(messageElement);
+
+        // Reproduz mensagens do bot (excluindo mensagens temporárias)
+        if (msg.sender === 'bot' && !msg.temporary) {
+            speakText(msg.text.replace('Bot: ', ''));
+        }
+    });
+
+    // Rola para o final do chat
+    chatWindow.scrollTop = chatWindow.scrollHeight;
+
+    // Exibe botões de sugestões/correções se houver dados
+    if (window.suggestionsData.length || window.correctionsData.length) {
+        displayButtons();
+    }
+}
