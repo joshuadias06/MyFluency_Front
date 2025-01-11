@@ -476,5 +476,26 @@ body.dark-theme .temporary {
 #buttonsContainer button:hover {
   background-color: #1558b0;
 }
+.play-button {
+  margin-left: 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 5px 10px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.play-button i {
+  margin: 0;
+}
+
+.play-button:hover {
+  background-color: #0056b3;
+}
 
 

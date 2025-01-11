@@ -42,7 +42,6 @@ async function sendMessage() {
     currentMessageInput.value = '';
 }
 
-
 // Função para atualizar a janela de chat
 function updateChatWindow() {
     const chatWindow = document.getElementById('chatWindow');
@@ -310,4 +309,19 @@ function toggleCorrections() {
     const box = getOrCreateBox('correctionsBox', 'Corrections');
     toggleBoxVisibility(box, window.correctionsData, '#444');
 }
+
+// Inicialização ao carregar a página
+window.onload = () => {
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    document.body.classList.add(savedTheme === 'dark' ? 'dark-theme' : 'light-theme');
+    currentMessageInput = document.getElementById('currentMessage');
+
+    // Adiciona evento para enviar mensagem ao pressionar "Enter"
+    currentMessageInput.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter') {
+            event.preventDefault(); // Evita quebra de linha
+            sendMessage(); // Chama a função de envio
+        }
+    });
+};
 
