@@ -236,38 +236,78 @@ function toggleBoxVisibility(box, data, color) {
     }
 }
 
-// Alterar a função updateChatWindow para incluir reprodução de mensagens do bot
-function updateChatWindow() {
-    const chatWindow = document.getElementById('chatWindow');
-    chatWindow.innerHTML = ''; // Limpa o conteúdo
-
-    // Adiciona mensagens ao chat
-    messages.forEach(msg => {
-        const messageElement = document.createElement('div');
-        messageElement.classList.add(msg.sender);
-
-        if (msg.sender === 'user') {
-            messageElement.classList.add('user');
-        } else if (msg.sender === 'bot' && msg.temporary) {
-            messageElement.classList.add('temporary');
-        } else {
-            messageElement.classList.add('bot');
-        }
-
-        messageElement.innerText = msg.text;
-        chatWindow.appendChild(messageElement);
-
-        // Reproduz mensagens do bot (excluindo mensagens temporárias)
-        if (msg.sender === 'bot' && !msg.temporary) {
-            speakText(msg.text.replace('Bot: ', ''));
-        }
-    });
-
-    // Rola para o final do chat
-    chatWindow.scrollTop = chatWindow.scrollHeight;
-
-    // Exibe botões de sugestões/correções se houver dados
-    if (window.suggestionsData.length || window.correctionsData.length) {
-        displayButtons();
+// Função para reproduzir texto usando síntese de fala
+function speakText(text) {
+    if ('speechSynthesis' in window) {
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'en-US'; // Define o idioma como inglês
+        speechSynthesis.speak(utterance);
+    } else {
+        console.warn('API de síntese de fala não suportada pelo navegador.');
     }
 }
+
+// Função utilitária para criar ou selecionar uma caixa
+function getOrCreateBox(id, title) {
+    let box = document.getElementById(id);
+    if (!box) {
+        box = document.createElement('div');
+        box.id = id;
+        box.style.display = 'none'; // Inicialmente oculto
+        box.classList.add('info-box');
+        document.getElementById('chatWindow').appendChild(box);
+    }
+    box.innerHTML = `<strong>${title}:</strong><ul></ul>`;
+    return box;
+}
+
+// Função utilitária para alternar visibilidade da caixa e adicionar botões
+function toggleBoxVisibility(box, data, color) {
+    if (box.style.display === 'none') {
+        box.style.display = 'block';
+        const list = box.querySelector('ul');
+        list.innerHTML = ''; // Limpa a lista existente
+
+        // Cria os itens da lista com botões de reprodução
+        data.forEach(item => {
+            const listItem = document.createElement('li');
+            listItem.textContent = item;
+
+            // Cria o botão de reprodução
+            const playButton = document.createElement('button');
+            playButton.innerHTML = '<i class="fas fa-play"></i>';
+            playButton.classList.add('play-button'); // Adiciona classe CSS para estilização
+            playButton.onclick = () => speakText(item); // Define o clique para reproduzir o texto
+
+            listItem.appendChild(playButton); // Adiciona o botão ao item da lista
+            list.appendChild(listItem); // Adiciona o item completo à lista
+        });
+
+        box.style.backgroundColor = color; // Aplica a cor de fundo personalizada
+    } else {
+        box.style.display = 'none';
+    }
+}
+
+// Função para alternar exibição das sugestões
+function toggleSuggestions() {
+    const correctionsBox = document.getElementById('correctionsBox');
+    if (correctionsBox && correctionsBox.style.display === 'block') {
+        correctionsBox.style.display = 'none'; // Oculta a caixa de correções
+    }
+
+    const box = getOrCreateBox('suggestionsBox', 'Suggestions');
+    toggleBoxVisibility(box, window.suggestionsData, '#444');
+}
+
+// Função para alternar exibição das correções
+function toggleCorrections() {
+    const suggestionsBox = document.getElementById('suggestionsBox');
+    if (suggestionsBox && suggestionsBox.style.display === 'block') {
+        suggestionsBox.style.display = 'none'; // Oculta a caixa de sugestões
+    }
+
+    const box = getOrCreateBox('correctionsBox', 'Corrections');
+    toggleBoxVisibility(box, window.correctionsData, '#444');
+}
+
