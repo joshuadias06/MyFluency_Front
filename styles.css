@@ -100,7 +100,7 @@ body {
   padding: 10px;
   overflow-y: auto;
   border-radius: 8px;
-  max-height: 70%;
+  max-height: 81%;
   position: relative;
   display: flex;
   flex-direction: column; /* Garante que as mensagens sejam empilhadas corretamente */
