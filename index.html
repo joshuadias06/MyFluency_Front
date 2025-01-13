@@ -16,59 +16,79 @@
 
   <body>
     <div class="App">
-      <h1 class="title">
-        <img
-          src="https://upload.wikimedia.org/wikipedia/commons/a/a4/Flag_of_the_United_States.svg"
-          alt="US Flag"
-          class="flag"
-        />
-        Spegllish
-      </h1>
-
-      <div class="theme-toggle-btn" onclick="toggleTheme()">
-        <i id="theme-icon" class="fas fa-moon"></i>
+      <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+          <img src="/assets/LogoSpegllish.jpg" alt="Logo" class="sidebar-logo" />
+          <button class="close-sidebar-btn" onclick="toggleSidebar()">&times;</button>
+        </div>
+        <div class="sidebar-content" id="chatHistory">
+          <!-- Histórico de mensagens será inserido aqui -->
+        </div>
       </div>
 
-      <div class="chat-recorder">
-        <div class="chat-window" id="chatWindow">
-          <!-- Botões para sugestões e correções -->
-          <div id="buttonsContainer" class="buttons-container" style="display: none;">
-            <button id="suggestionsButton" onclick="toggleSuggestions()">Suggestions</button>
-            <button id="correctionsButton" onclick="toggleCorrections()">Corrections</button>
-          </div>
+      <div class="main-content">
+        <button class="open-sidebar-btn" onclick="toggleSidebar()">&#9776;</button>
+        <h1 class="title">
+          <img
+            src="https://upload.wikimedia.org/wikipedia/commons/a/a4/Flag_of_the_United_States.svg"
+            alt="US Flag"
+            class="flag"
+          />
+          Spegllish
+        </h1>
 
-          <!-- Caixa de sugestões -->
-          <div id="suggestionsBox" class="suggestions-box" style="display: none;"></div>
-
-          <!-- Caixa de correções -->
-          <div id="correctionsBox" class="corrections-box" style="display: none;"></div>
+        <div class="theme-toggle-btn" onclick="toggleTheme()">
+          <i id="theme-icon" class="fas fa-moon"></i>
         </div>
 
-        <div class="chat-input-wrapper">
-          <div class="chat-input-container">
-            <input
-              type="text"
-              id="currentMessage"
-              placeholder="Fale com a MyFluency"
-              class="chat-input"
-            />
-            <div class="chat-controls">
-              <div class="audio-controls">
-                <button onclick="startRecording()" id="recordButton" class="record-button">
-                  <i class="fas fa-microphone"></i>
-                </button>
-                <button onclick="stopRecording()" id="stopButton" class="stop-button" disabled>
-                  <i class="fas fa-square"></i>
+        <div class="chat-recorder">
+          <div class="chat-window" id="chatWindow">
+            <!-- Botões para sugestões e correções -->
+            <div id="buttonsContainer" class="buttons-container" style="display: none;">
+              <button id="suggestionsButton" onclick="toggleSuggestions()">Suggestions</button>
+              <button id="correctionsButton" onclick="toggleCorrections()">Corrections</button>
+            </div>
+
+            <!-- Caixa de sugestões -->
+            <div id="suggestionsBox" class="suggestions-box" style="display: none;"></div>
+
+            <!-- Caixa de correções -->
+            <div id="correctionsBox" class="corrections-box" style="display: none;"></div>
+          </div>
+
+          <div class="chat-input-wrapper">
+            <div class="chat-input-container">
+              <input
+                type="text"
+                id="currentMessage"
+                placeholder="Fale com a MyFluency"
+                class="chat-input"
+              />
+              <div class="chat-controls">
+                <div class="audio-controls">
+                  <button onclick="startRecording()" id="recordButton" class="record-button">
+                    <i class="fas fa-microphone"></i>
+                  </button>
+                  <button onclick="stopRecording()" id="stopButton" class="stop-button" disabled>
+                    <i class="fas fa-square"></i>
+                  </button>
+                </div>
+                <button onclick="sendMessage()" class="send-button">
+                  <i class="fas fa-arrow-up"></i>
                 </button>
               </div>
-              <button onclick="sendMessage()" class="send-button">
-                <i class="fas fa-arrow-up"></i>
-              </button>
             </div>
           </div>
         </div>
       </div>
     </div>
+
+    <script>
+      function toggleSidebar() {
+        const sidebar = document.getElementById("sidebar");
+        sidebar.classList.toggle("open");
+      }
+    </script>
 
     <script src="api.js"></script>
     <script src="script.js"></script>
